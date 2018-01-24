@@ -1,0 +1,107 @@
+/*
+  COLORS
+
+  Primary:
+  -212121
+  -424242
+  616161
+  757575
+  -9E9E9E
+  -BDBDBD
+  E0E0E0
+  EEEEEE
+  -F5F5F5
+  -FAFAFA
+
+  Secondary:
+  138496
+ */
+
+body {
+  background-color: #212121;
+}
+
+.menu {
+  margin: 32px auto;
+  width: 200px;
+}
+
+.btn {
+  margin: 8px 0;
+}
+
+.color-p2 {
+  color: #424242;
+}
+
+.color-p5 {
+  color: #9E9E9E;
+}
+
+canvas {
+  background-color: #424242;
+}
+
+.my-form {
+  padding: 16px;
+}
+
+.my-form .form-control {
+  padding: .375rem .75rem;
+}
+
+.my-form .list-group-item {
+  color: #9E9E9E;
+  cursor: pointer;
+  background-color: #424242;
+}
+
+.my-form h2 {
+  margin: 16px;
+  text-align: center;
+  color: #424242;
+}
+
+.my-form h3 {
+  margin: 8px;
+  color: #9E9E9E;
+}
+
+.my-form h4 {
+  margin: 4px;
+  color: #212121;
+}
+
+.my-form select, .my-form input:not(.btn) {
+  color: #9E9E9E;
+  background-color: #424242;
+  border-color: #424242;
+}
+
+.my-form .input-group-text {
+  background-color: #9E9E9E;
+  border-color: #9E9E9E;
+  color: #424242;
+}
+
+.my-form p {
+  color: #9E9E9E;
+  margin: auto;
+}
+
+.my-form .file-input {
+  margin: auto;
+  width: 200px;
+}
+
+.my-form .board {
+  background-color: #424242;
+}
+
+.my-form .table {
+  color: #9E9E9E;
+}
+
+.table td, .table th {
+    border-top: none;
+}
