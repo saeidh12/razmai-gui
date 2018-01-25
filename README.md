@@ -16,3 +16,5 @@ This is the graphical user interface for the [razmai-server](https://github.com/
 4. To run the gui server run : `npm start`
 
 go to the link presented in the terminal/console at the menu end point.
+
+Refer to the [wiki](https://github.com/saeidh12/razmai-gui/wiki) on how each section of the gui works.
