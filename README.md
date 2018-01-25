@@ -3,7 +3,7 @@
 
 This is the graphical user interface for the [razmai-server](https://github.com/saeidh12/razmai-server). 
 
-## Prerequesets
+## Dependencies
 * [node.js](https://nodejs.org/)
 * [npm.js](https://www.npmjs.com/)
 
