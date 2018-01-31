@@ -5,30 +5,30 @@ import CSS_COLOR_NAMES from '../Variables/Colors';
 import OPTION0 from '../Variables/GraphOptions';
 
 class PlayGame extends Component {
-  game_specs_queue = [
-    {
-      game: {
-        Map: this.props.map[1],
-        Players: this.props.players,
-        Teams: this.props.teams,
-        Time_limit: this.props.timeLimit,
-      },
-      player_leader_board: [],
-      team_leader_board:   [],
-      Player_turn: 0,
-      game_ended:  false,
-    },
-  ];
-  view_specs = {
-    paused:      true,
-    delay_time:  1500,
-  };
   constructor(props) {
     super(props);
-    this.state = {
-      game_specs_queue_index: 0,
+    this.state            = {
+      turn: 0,
       pause_text:             'Play'
-    }
+    };
+    this.game             = {
+        Turns:       [this.props.map[1],],
+        Players:     this.props.players,
+        Teams:       this.props.teams,
+        Time_limit:  this.props.timeLimit,
+    };
+    this.game_specs_queue = [
+      {
+        player_leader_board: [],
+        team_leader_board:   [],
+        Player_turn: 0,
+        game_ended:  false,
+      },
+    ];
+    this.view_specs = {
+      paused:      true,
+      delay_time:  1500,
+    };
   }
 
   // shouldComponentUpdate(nextProps, nextState) {
@@ -37,22 +37,22 @@ class PlayGame extends Component {
 
   PlayTurn() {
     const post_data = {
-      game: this.game_specs_queue[this.game_specs_queue.length - 1].game,
+      game: this.game,
       Player_turn: this.game_specs_queue[this.game_specs_queue.length - 1].Player_turn,
     }
     axios.post(this.props.server + '/play-turn', post_data)
       .then( (response) => {
         var nextPlayer = this.game_specs_queue[this.game_specs_queue.length - 1].Player_turn + 1;
-        if (nextPlayer === this.game_specs_queue[this.game_specs_queue.length - 1].game.Map.Number_of_players) {
+        if (nextPlayer === this.game.Turns[0].Number_of_players) {
           nextPlayer = 0;
         }
         this.game_specs_queue.push({
-          game:                response.data.game,
           player_leader_board: response.data.player_leader_board,
           team_leader_board:   response.data.team_leader_board,
           Player_turn:         nextPlayer,
           game_ended:          response.data.game_ended,
         });
+        this.game.Turns.push(response.data.newturn)
         if(!response.data.game_ended) {
           this.PlayTurn();
         } else {
@@ -68,7 +68,7 @@ class PlayGame extends Component {
   ResetMap() {
     this.view_specs.paused = true;
     this.setState({
-      game_specs_queue_index: 0
+      turn: 0
     });
   }
 
@@ -77,7 +77,7 @@ class PlayGame extends Component {
   }
 
   PauseToggle() {
-    if(!this.game_specs_queue[this.state.game_specs_queue_index].game_ended) {
+    if(!this.game_specs_queue[this.state.turn].game_ended) {
       this.view_specs.paused = !this.view_specs.paused;
       this.setState({pause_text : this.view_specs.paused ? 'Play' : 'Pause'});
       if (!this.view_specs.paused) {
@@ -88,7 +88,7 @@ class PlayGame extends Component {
 
   DisplayNextTurn() {
     setTimeout(() => {
-      if (!this.view_specs.paused && !this.game_specs_queue[this.state.game_specs_queue_index].game_ended) {
+      if (!this.view_specs.paused && !this.game_specs_queue[this.state.turn].game_ended) {
         this.NextMove();
         this.DisplayNextTurn();
       }
@@ -100,21 +100,21 @@ class PlayGame extends Component {
   }
 
   NextMove() {
-    const turn = this.state.game_specs_queue_index + 1;
+    const turn = this.state.turn + 1;
     if (turn >= 0 && turn < this.game_specs_queue.length)
-      this.setState({game_specs_queue_index: turn});
+      this.setState({turn: turn});
   }
 
   PrevMove() {
-    const turn = this.state.game_specs_queue_index - 1;
+    const turn = this.state.turn - 1;
     if (turn >= 0 && turn < this.game_specs_queue.length)
-      this.setState({game_specs_queue_index: turn});
+      this.setState({turn: turn});
   }
 
-  CreateEdges(game) {
+  CreateEdges(turn) {
     var edges = [];
     // eslint-disable-next-line
-    game.Map.Bases.map((base, index) => {
+    turn.Bases.map((base, index) => {
       for (var i = 0; i < base.Connections.length; i++) {
         if (base.Connections[i] > index)
         edges.push({from: index, to: base.Connections[i]})
@@ -123,26 +123,26 @@ class PlayGame extends Component {
     return edges
   }
 
-  CreateNodes(game) {
-    return game.Map.Bases.map((base, index) => {
+  CreateNodes(turn) {
+    return turn.Bases.map((base, index) => {
       return {color: CSS_COLOR_NAMES[base.Occupying_player + 1], id: index, label: base.Troop_count.toString(), x: base.X, y:base.Y}
     });
   }
 
   render() {
-    const current_stage = this.game_specs_queue[this.state.game_specs_queue_index];
-    const game          = current_stage.game;
+    const current_specs     = this.game_specs_queue[this.state.turn];
+    const current_turn_map  = this.game.Turns[this.state.turn];
 
-    var player_leader_board = current_stage.player_leader_board.map((item, index) => {
-      return (<tr key={index}><td>{ index + 1 }</td><td>{ game.Players[item].Name }</td><td><div style={{backgroundColor: CSS_COLOR_NAMES[item + 1], width: "25px", height: "25px"}} className="color-square"></div></td></tr>)
+    var player_leader_board = current_specs.player_leader_board.map((item, index) => {
+      return (<tr key={index}><td>{ index + 1 }</td><td>{ this.game.Players[item].Name }</td><td><div style={{backgroundColor: CSS_COLOR_NAMES[item + 1], width: "25px", height: "25px"}} className="color-square"></div></td></tr>)
     });
-    var team_leader_board = current_stage.team_leader_board.map((item, index) => {
+    var team_leader_board = current_specs.team_leader_board.map((item, index) => {
       return (<tr key={index}><td>{ index + 1 }</td><td>Team { item }</td></tr>)
     });
 
     var graph = {
-      nodes: this.CreateNodes(game),
-      edges: this.CreateEdges(game),
+      nodes: this.CreateNodes(current_turn_map),
+      edges: this.CreateEdges(current_turn_map),
     };
 
     var options = OPTION0;
