@@ -16,9 +16,9 @@ class SaveMapForm extends Component {
 
   SaveMap(e) {
     if (this.MapisValid(this.props.Map)) {
-      this.props.Map.Weak_delimiter    = this.newWeak_delimiter.value;
-    	this.props.Map.Medium_delimiter  = this.newMedium_delimiter.value;
-    	this.props.Map.Conquer_bonus     = this.newConquer_bonus.value;
+      this.props.Map.Weak_delimiter    = parseInt(this.newWeak_delimiter.value, 10);
+    	this.props.Map.Medium_delimiter  = parseInt(this.newMedium_delimiter.value, 10);
+    	this.props.Map.Conquer_bonus     = parseInt(this.newConquer_bonus.value, 10);
 
       fileDownload(JSON.stringify(this.props.Map, null, '\t'), this.newMapName.value + '.json');
     }

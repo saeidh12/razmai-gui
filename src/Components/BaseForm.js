@@ -47,14 +47,14 @@ class BaseForm extends Component {
     var oldOccupyingPlayer = this.props.Map.Bases[this.props.selectedNode].Occupying_player;
     var newMap = this.props.Map;
     var editedBase = {
-      Occupying_player: this.editBaseOccupying_player.value,
-      Troop_count:      this.editBaseTroop_count.value,
-      Attack_bonus:     this.editBaseAttack_bonus.value,
-      Defense_bonus:    this.editBaseDefense_bonus.value,
-      Troop_bonus:      this.editBaseTroop_bonus.value,
+      Occupying_player: parseInt(this.editBaseOccupying_player.value, 10),
+      Troop_count:      parseInt(this.editBaseTroop_count.value, 10),
+      Attack_bonus:     parseFloat(this.editBaseAttack_bonus.value, 10),
+      Defense_bonus:    parseFloat(this.editBaseDefense_bonus.value, 10),
+      Troop_bonus:      parseInt(this.editBaseTroop_bonus.value, 10),
       Connections:      this.props.Map.Bases[this.props.selectedNode].Connections,
-      X:                this.editBaseX.value,
-      Y:                this.editBaseY.value,
+      X:                parseInt(this.editBaseX.value, 10),
+      Y:                parseInt(this.editBaseY.value, 10),
     };
     newMap.Bases[this.props.selectedNode] = editedBase;
     if (this.editBaseOccupying_player.value === newMap.Number_of_players) {
