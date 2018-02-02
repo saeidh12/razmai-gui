@@ -16,6 +16,7 @@ class PlayGame extends Component {
         Players:     this.props.players,
         Teams:       this.props.teams,
         Time_limit:  this.props.timeLimit,
+        Max_moves:   100,
     };
     this.game_specs_queue = [
       {
